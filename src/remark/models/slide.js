@@ -1,136 +1,136 @@
-var converter = require('../converter');
+var converter = require('../Converter')
 
-module.exports = Slide;
+module.exports = Slide
 
 function Slide (slideIndex, slideNumber, slide, template, options) {
-  var self = this;
+	var self = this
 
-  self.properties = slide.properties || {};
-  self.links = slide.links || {};
-  self.content = slide.content || [];
-  self.notes = slide.notes || '';
+	self.properties = slide.properties || {}
+	self.links = slide.links || {}
+	self.content = slide.content || []
+	self.notes = slide.notes || ''
 
-  self.getSlideIndex = function () { return slideIndex; };
-  self.getSlideNumber = function () { return slideNumber; };
+	self.getSlideIndex = function () { return slideIndex }
+	self.getSlideNumber = function () { return slideNumber }
 
-  if (template) {
-    inherit(self, template, options);
-  }
+	if (template) {
+		inherit(self, template, options)
+	}
 }
 
 function inherit (slide, template, options) {
-  inheritProperties(slide, template);
-  inheritContent(slide, template);
-  inheritNotes(slide, template, options);
+	inheritProperties(slide, template)
+	inheritContent(slide, template)
+	inheritNotes(slide, template, options)
 }
 
 function inheritProperties (slide, template) {
-  var property
-    , value
-    ;
+	var property
+		, value
+    
 
-  for (property in template.properties) {
-    if (!template.properties.hasOwnProperty(property) ||
+	for (property in template.properties) {
+		if (!template.properties.hasOwnProperty(property) ||
         ignoreProperty(property)) {
-      continue;
-    }
+			continue
+		}
 
-    value = [template.properties[property]];
+		value = [template.properties[property]]
 
-    if (property === 'class' && slide.properties[property]) {
-      value.push(slide.properties[property]);
-    }
+		if (property === 'class' && slide.properties[property]) {
+			value.push(slide.properties[property])
+		}
 
-    if (property === 'class' || slide.properties[property] === undefined) {
-      slide.properties[property] = value.join(', ');
-    }
-  }
+		if (property === 'class' || slide.properties[property] === undefined) {
+			slide.properties[property] = value.join(', ')
+		}
+	}
 }
 
 function ignoreProperty (property) {
-  return property === 'name' ||
+	return property === 'name' ||
     property === 'layout' ||
-    property === 'count';
+    property === 'count'
 }
 
 function inheritContent (slide, template) {
-  var expandedVariables;
+	var expandedVariables
 
-  slide.properties.content = slide.content.slice();
-  deepCopyContent(slide, template.content);
+	slide.properties.content = slide.content.slice()
+	deepCopyContent(slide, template.content)
 
-  expandedVariables = slide.expandVariables(/* contentOnly: */ true);
+	expandedVariables = slide.expandVariables(/* contentOnly: */ true)
 
-  if (expandedVariables.content === undefined) {
-    slide.content = slide.content.concat(slide.properties.content);
-  }
+	if (expandedVariables.content === undefined) {
+		slide.content = slide.content.concat(slide.properties.content)
+	}
 
-  delete slide.properties.content;
+	delete slide.properties.content
 }
 
 function deepCopyContent(target, content) {
-  var i;
+	var i
 
-  target.content = [];
-  for (i = 0; i < content.length; ++i) {
-    if (typeof content[i] === 'string') {
-      target.content.push(content[i]);
-    }
-    else {
-      target.content.push({
-        block: content[i].block,
-        class: content[i].class,
-      });
-      deepCopyContent(target.content[target.content.length-1], content[i].content);
-    }
-  }
+	target.content = []
+	for (i = 0; i < content.length; ++i) {
+		if (typeof content[i] === 'string') {
+			target.content.push(content[i])
+		}
+		else {
+			target.content.push({
+				block: content[i].block,
+				class: content[i].class,
+			})
+			deepCopyContent(target.content[target.content.length-1], content[i].content)
+		}
+	}
 }
 
 function inheritNotes (slide, template, options) {
-  if (template.notes && options.inheritPresenterNotes) {
-    slide.notes = template.notes + '\n\n' + slide.notes;
-  }
+	if (template.notes && options.inheritPresenterNotes) {
+		slide.notes = template.notes + '\n\n' + slide.notes
+	}
 }
 
 Slide.prototype.expandVariables = function (contentOnly, content, expandResult) {
-  var properties = this.properties
-    , i
-    ;
+	var properties = this.properties
+		, i
+    
 
-  content = content !== undefined ? content : this.content;
-  expandResult = expandResult || {};
+	content = content !== undefined ? content : this.content
+	expandResult = expandResult || {}
 
-  for (i = 0; i < content.length; ++i) {
-    if (typeof content[i] === 'string') {
-      content[i] = content[i].replace(/(\\)?(\{\{([^\}\n]+)\}\})/g, expand);
-    }
-    else {
-      this.expandVariables(contentOnly, content[i].content, expandResult);
-    }
-  }
+	for (i = 0; i < content.length; ++i) {
+		if (typeof content[i] === 'string') {
+			content[i] = content[i].replace(/(\\)?(\{\{([^\}\n]+)\}\})/g, expand)
+		}
+		else {
+			this.expandVariables(contentOnly, content[i].content, expandResult)
+		}
+	}
 
-  function expand (match, escaped, unescapedMatch, property) {
-    var propertyName = property.trim()
-      , propertyValue
-      ;
+	function expand (match, escaped, unescapedMatch, property) {
+		var propertyName = property.trim()
+			, propertyValue
+      
 
-    if (escaped) {
-      return contentOnly ? match[0] : unescapedMatch;
-    }
+		if (escaped) {
+			return contentOnly ? match[0] : unescapedMatch
+		}
 
-    if (contentOnly && propertyName !== 'content') {
-      return match;
-    }
+		if (contentOnly && propertyName !== 'content') {
+			return match
+		}
 
-    propertyValue = properties[propertyName];
+		propertyValue = properties[propertyName]
 
-    if (propertyValue !== undefined) {
-      expandResult[propertyName] = propertyValue;
-      return propertyValue;
-    }
+		if (propertyValue !== undefined) {
+			expandResult[propertyName] = propertyValue
+			return propertyValue
+		}
 
-    return propertyName === 'content' ? '' : unescapedMatch;
-  }
+		return propertyName === 'content' ? '' : unescapedMatch
+	}
 
-  return expandResult;
-};
+	return expandResult
+}
