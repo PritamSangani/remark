@@ -1,7 +1,7 @@
 var Api = require('../../src/remark/Api')
 	, TestDom = require('../test_dom')
 	, highlighter = require('../../src/remark/highlighter')
-	, Slideshow = require('../../src/remark/models/slideshow')
+	, Slideshow = require('../../src/remark/models/SlideShow')
   
 
 describe('API', function () {

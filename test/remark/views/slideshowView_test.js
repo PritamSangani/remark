@@ -1,252 +1,252 @@
 var EventEmitter = require('events').EventEmitter
-  , TestDom = require('../../test_dom')
-  , SlideshowView = require('../../../src/remark/views/slideshowView')
-  , Slideshow = require('../../../src/remark/models/slideshow')
-  , utils = require('../../../src/remark/utils')
-  ;
+	, TestDom = require('../../test_dom')
+	, SlideshowView = require('../../../src/remark/views/slideshowView')
+	, Slideshow = require('../../../src/remark/models/SlideShow')
+	, utils = require('../../../src/remark/utils')
+  
 
 describe('SlideshowView', function () {
-  var events
-    , dom
-    , model
-    , containerElement
-    , options
-    , view
-    ;
+	var events
+		, dom
+		, model
+		, containerElement
+		, options
+		, view
+    
 
-  beforeEach(function () {
-    events = new EventEmitter();
-    dom = new TestDom();
-    model = new Slideshow(events, dom);
-    containerElement = document.createElement('div');
-    options = { container: containerElement };
-  });
+	beforeEach(function () {
+		events = new EventEmitter()
+		dom = new TestDom()
+		model = new Slideshow(events, dom)
+		containerElement = document.createElement('div')
+		options = { container: containerElement }
+	})
 
-  describe('container element configuration', function () {
-    beforeEach(function () {
-      view = new SlideshowView(events, dom, options, model);
-    });
+	describe('container element configuration', function () {
+		beforeEach(function () {
+			view = new SlideshowView(events, dom, options, model)
+		})
 
-    it('should style element', function () {
-      containerElement.className.should.containEql('remark-container');
-    });
+		it('should style element', function () {
+			containerElement.className.should.containEql('remark-container')
+		})
 
-    it('should position element', function () {
-      containerElement.style.position.should.equal('absolute');
-    });
+		it('should position element', function () {
+			containerElement.style.position.should.equal('absolute')
+		})
 
-    it('should make element focusable', function () {
-      containerElement.tabIndex.should.equal(-1);
-    });
+		it('should make element focusable', function () {
+			containerElement.tabIndex.should.equal(-1)
+		})
 
-    describe('proxying of element events', function () {
-      it('should proxy keydown event', function (done) {
-        events.on('keydown', function () {
-          done();
-        });
+		describe('proxying of element events', function () {
+			it('should proxy keydown event', function (done) {
+				events.on('keydown', function () {
+					done()
+				})
 
-        triggerEvent(containerElement, 'keydown');
-      });
+				triggerEvent(containerElement, 'keydown')
+			})
 
-      it('should proxy keypress event', function (done) {
-        events.on('keypress', function () {
-          done();
-        });
+			it('should proxy keypress event', function (done) {
+				events.on('keypress', function () {
+					done()
+				})
 
-        triggerEvent(containerElement, 'keypress');
-      });
+				triggerEvent(containerElement, 'keypress')
+			})
 
-      it('should proxy mousewheel event', function (done) {
-        events.on('mousewheel', function () {
-          done();
-        });
+			it('should proxy mousewheel event', function (done) {
+				events.on('mousewheel', function () {
+					done()
+				})
 
-        triggerEvent(containerElement, 'mousewheel');
-      });
+				triggerEvent(containerElement, 'mousewheel')
+			})
 
-      it('should proxy touchstart event', function (done) {
-        events.on('touchstart', function () {
-          done();
-        });
+			it('should proxy touchstart event', function (done) {
+				events.on('touchstart', function () {
+					done()
+				})
 
-        triggerEvent(containerElement, 'touchstart');
-      });
+				triggerEvent(containerElement, 'touchstart')
+			})
 
-      it('should proxy touchmove event', function (done) {
-        events.on('touchmove', function () {
-          done();
-        });
+			it('should proxy touchmove event', function (done) {
+				events.on('touchmove', function () {
+					done()
+				})
 
-        triggerEvent(containerElement, 'touchmove');
-      });
+				triggerEvent(containerElement, 'touchmove')
+			})
 
-      it('should proxy touchend event', function (done) {
-        events.on('touchend', function () {
-          done();
-        });
+			it('should proxy touchend event', function (done) {
+				events.on('touchend', function () {
+					done()
+				})
 
-        triggerEvent(containerElement, 'touchend');
-      });
-    });
-  });
+				triggerEvent(containerElement, 'touchend')
+			})
+		})
+	})
 
-  describe('document.body container element configuration', function () {
-    var body;
+	describe('document.body container element configuration', function () {
+		var body
 
-    beforeEach(function () {
-      body = dom.getBodyElement();
-      containerElement = body;
-      options = { container : containerElement };
-      view = new SlideshowView(events, dom, options, model);
-    });
+		beforeEach(function () {
+			body = dom.getBodyElement()
+			containerElement = body
+			options = { container : containerElement }
+			view = new SlideshowView(events, dom, options, model)
+		})
 
-    it('should style HTML element', function () {
-      dom.getHTMLElement().className.should.containEql('remark-container');
-    });
+		it('should style HTML element', function () {
+			dom.getHTMLElement().className.should.containEql('remark-container')
+		})
 
-    it('should not position element', function () {
-      containerElement.style.position.should.not.equal('absolute');
-    });
+		it('should not position element', function () {
+			containerElement.style.position.should.not.equal('absolute')
+		})
 
-    describe('proxying of element events', function () {
-      it('should proxy resize event', function (done) {
-        events.on('resize', function () {
-          done();
-        });
+		describe('proxying of element events', function () {
+			it('should proxy resize event', function (done) {
+				events.on('resize', function () {
+					done()
+				})
 
-        triggerEvent(window, 'resize');
-      });
+				triggerEvent(window, 'resize')
+			})
 
-      it('should proxy hashchange event', function (done) {
-        events.on('hashchange', function () {
-          done();
-        });
+			it('should proxy hashchange event', function (done) {
+				events.on('hashchange', function () {
+					done()
+				})
 
-        triggerEvent(window, 'hashchange');
-      });
+				triggerEvent(window, 'hashchange')
+			})
 
-      it('should proxy keydown event', function (done) {
-        events.on('keydown', function () {
-          done();
-        });
+			it('should proxy keydown event', function (done) {
+				events.on('keydown', function () {
+					done()
+				})
 
-        triggerEvent(window, 'keydown');
-      });
+				triggerEvent(window, 'keydown')
+			})
 
-      it('should proxy keypress event', function (done) {
-        events.on('keypress', function () {
-          done();
-        });
+			it('should proxy keypress event', function (done) {
+				events.on('keypress', function () {
+					done()
+				})
 
-        triggerEvent(window, 'keypress');
-      });
+				triggerEvent(window, 'keypress')
+			})
 
-      it('should proxy mousewheel event', function (done) {
-        events.on('mousewheel', function () {
-          done();
-        });
+			it('should proxy mousewheel event', function (done) {
+				events.on('mousewheel', function () {
+					done()
+				})
 
-        triggerEvent(window, 'mousewheel');
-      });
+				triggerEvent(window, 'mousewheel')
+			})
 
-      it('should proxy touchstart event', function (done) {
-        events.on('touchstart', function () {
-          done();
-        });
+			it('should proxy touchstart event', function (done) {
+				events.on('touchstart', function () {
+					done()
+				})
 
-        triggerEvent(body, 'touchstart');
-      });
+				triggerEvent(body, 'touchstart')
+			})
 
-      it('should proxy touchmove event', function (done) {
-        events.on('touchmove', function () {
-          done();
-        });
+			it('should proxy touchmove event', function (done) {
+				events.on('touchmove', function () {
+					done()
+				})
 
-        triggerEvent(body, 'touchmove');
-      });
+				triggerEvent(body, 'touchmove')
+			})
 
-      it('should proxy touchend event', function (done) {
-        events.on('touchend', function () {
-          done();
-        });
+			it('should proxy touchend event', function (done) {
+				events.on('touchend', function () {
+					done()
+				})
 
-        triggerEvent(body, 'touchend');
-      });
-    });
-  });
+				triggerEvent(body, 'touchend')
+			})
+		})
+	})
 
-  describe('ratio calculation', function () {
-    it('should calculate element size for 4:3', function () {
-      model = new Slideshow(events, dom, {ratio: '4:3'});
+	describe('ratio calculation', function () {
+		it('should calculate element size for 4:3', function () {
+			model = new Slideshow(events, dom, {ratio: '4:3'})
 
-      view = new SlideshowView(events, dom, options, model);
+			view = new SlideshowView(events, dom, options, model)
 
-      view.slideViews[0].scalingElement.style.width.should.equal('908px');
-      view.slideViews[0].scalingElement.style.height.should.equal('681px');
-    });
+			view.slideViews[0].scalingElement.style.width.should.equal('908px')
+			view.slideViews[0].scalingElement.style.height.should.equal('681px')
+		})
 
-    it('should calculate element size for 16:9', function () {
-      model = new Slideshow(events, dom, {ratio: '16:9'});
+		it('should calculate element size for 16:9', function () {
+			model = new Slideshow(events, dom, {ratio: '16:9'})
 
-      view = new SlideshowView(events, dom, options, model);
+			view = new SlideshowView(events, dom, options, model)
 
-      view.slideViews[0].scalingElement.style.width.should.equal('1210px');
-      view.slideViews[0].scalingElement.style.height.should.equal('681px');
-    });
-  });
+			view.slideViews[0].scalingElement.style.width.should.equal('1210px')
+			view.slideViews[0].scalingElement.style.height.should.equal('681px')
+		})
+	})
 
-  describe('model synchronization', function () {
-    beforeEach(function () {
-      view = new SlideshowView(events, dom, options, model);
-    });
+	describe('model synchronization', function () {
+		beforeEach(function () {
+			view = new SlideshowView(events, dom, options, model)
+		})
 
-    it('should create initial slide views', function () {
-      view.slideViews.length.should.equal(1);
-    });
+		it('should create initial slide views', function () {
+			view.slideViews.length.should.equal(1)
+		})
 
-    it('should replace slide views on slideshow update', function () {
-      model.loadFromString('a\n---\nb');
+		it('should replace slide views on slideshow update', function () {
+			model.loadFromString('a\n---\nb')
 
-      view.slideViews.length.should.equal(2);
-    });
-  });
+			view.slideViews.length.should.equal(2)
+		})
+	})
 
-  describe('modes', function () {
-    beforeEach(function () {
-      view = new SlideshowView(events, dom, options, model);
-    });
+	describe('modes', function () {
+		beforeEach(function () {
+			view = new SlideshowView(events, dom, options, model)
+		})
 
-    it('should toggle blackout on event', function () {
-      events.emit('toggleBlackout');
+		it('should toggle blackout on event', function () {
+			events.emit('toggleBlackout')
 
-      utils.hasClass(containerElement, 'remark-blackout-mode').should.equal(true);
-    });
+			utils.hasClass(containerElement, 'remark-blackout-mode').should.equal(true)
+		})
 
-    it('should leave blackout mode on event', function () {
-      utils.addClass(containerElement, 'remark-blackout-mode');
-      events.emit('hideOverlay');
+		it('should leave blackout mode on event', function () {
+			utils.addClass(containerElement, 'remark-blackout-mode')
+			events.emit('hideOverlay')
 
-      utils.hasClass(containerElement, 'remark-blackout-mode').should.equal(false);
-    });
+			utils.hasClass(containerElement, 'remark-blackout-mode').should.equal(false)
+		})
 
-    it('should toggle mirrored on event', function () {
-      events.emit('toggleMirrored');
+		it('should toggle mirrored on event', function () {
+			events.emit('toggleMirrored')
 
-      utils.hasClass(containerElement, 'remark-mirrored-mode').should.equal(true);
-    });
+			utils.hasClass(containerElement, 'remark-mirrored-mode').should.equal(true)
+		})
 
-    it('should leave toggle mirrored on event', function () {
-      utils.addClass(containerElement, 'remark-mirrored-mode');
-      events.emit('toggleMirrored');
+		it('should leave toggle mirrored on event', function () {
+			utils.addClass(containerElement, 'remark-mirrored-mode')
+			events.emit('toggleMirrored')
 
-      utils.hasClass(containerElement, 'remark-mirrored-mode').should.equal(false);
-    });
+			utils.hasClass(containerElement, 'remark-mirrored-mode').should.equal(false)
+		})
 
-  });
+	})
 
-  function triggerEvent(element, eventName) {
-    var event = document.createEvent('HTMLEvents');
-    event.initEvent(eventName, true, true);
-    element.dispatchEvent(event);
-  }
-});
+	function triggerEvent(element, eventName) {
+		var event = document.createEvent('HTMLEvents')
+		event.initEvent(eventName, true, true)
+		element.dispatchEvent(event)
+	}
+})
